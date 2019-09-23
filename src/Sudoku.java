@@ -8,7 +8,6 @@ public class Sudoku {
     }
  
     public static void main(String[] args) {
-        // 号称世界上最难数独
         int[][] sudoku = {
         		{0,2,0,0},
         		{0,0,0,4},
