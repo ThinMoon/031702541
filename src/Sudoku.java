@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 public class Sudoku {
 	private int rank;
     private int[][] matrix;
@@ -8,15 +10,54 @@ public class Sudoku {
     }
  
     public static void main(String[] args) {
-        int[][] sudoku = {
-        		{0,2,0,0},
-        		{0,0,0,4},
-        		{2,0,0,0},
-        		{0,0,3,0},
-                };
-        Sudoku s = new Sudoku(sudoku, 4);
-        s.backTrace(0, 0);
+    	
+    	int rank = 0;
+    	int suCnt = 0;
+    	String inputFilename = "";
+    	String outputFilename = "";
+    	if(args.length > 0 && args != null) {
+    		for(int i = 0; i < args.length; i++) {
+    			switch(args[i]) {
+					case "-m":
+						rank = Integer.valueOf(args[++i]);
+						break;
+					case "-n":
+						suCnt = Integer.valueOf(args[++i]);
+						break;
+					case "-i":
+						inputFilename = args[++i];
+						break;
+					case "-o":
+						outputFilename = args[++i];
+				}
+    			
+    		}
+    			
+    	}else {
+    		System.out.println("未输入参数！");
+    		System.exit(1);
+    	}
+    	
+    	
+    	
+    	
+    	TxtIO txtIO = new TxtIO();
+    	int[] array = txtIO.readFile(inputFilename);
+    	LinkedList<int[][]> sudokus = txtIO.splitArray(array, rank, suCnt);
+    	LinkedList<int[][]> outSudokus = new LinkedList<int[][]>();
+
+    	
+    	for(int i = 0; i < sudokus.size(); i++) {
+		    Sudoku s = new Sudoku(sudokus.get(i), rank);
+		    s.backTrace(0, 0, outSudokus);
+    	}
+    	
+    	txtIO.writeFile(outputFilename, outSudokus, rank);
+    	
+    	
     }
+    
+    
  
     /**
      * 回溯算法
@@ -24,11 +65,16 @@ public class Sudoku {
      * @param i 行号
      * @param j 列号
      */
-    public void backTrace(int i, int j) {
+    public void backTrace(int i, int j, LinkedList<int[][]> outSudokus) {
         if (i == rank-1 && j == rank) {
-            //已经成功了，打印数组即可
-            System.out.println("获取正确解");
-            printArray();
+        	int[][] array = new int[9][9];
+        	for(int ai = 0; ai < rank; ai++) {
+        		for(int aj = 0; aj < rank; aj++) {
+        			array[ai][aj] = matrix[ai][aj];
+        		}
+        	}
+        	outSudokus.add(array);
+        	
             return;
         }
  
@@ -45,14 +91,15 @@ public class Sudoku {
                 if (check(i, j, k)) {
                     //将该值赋给该空格，然后进入下一个空格
                     matrix[i][j] = k;
-                    backTrace(i, j + 1);
+                    backTrace(i, j + 1, outSudokus);
                     //初始化该空格
                     matrix[i][j] = 0;
+                    
                 }
             }
         } else {
             //如果该位置已经有值了，就进入下一个空格进行计算
-            backTrace(i, j + 1);
+            backTrace(i, j + 1, outSudokus);
         }
     }
  
@@ -126,17 +173,9 @@ public class Sudoku {
         } 
         return true;
     }
+    
+    
+    
+    
  
-    /**
-     * 打印矩阵
-     */
-    public void printArray() {
-        for (int i = 0; i < rank; i++) {
-            for (int j = 0; j < rank; j++) {
-                System.out.print(matrix[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
 }

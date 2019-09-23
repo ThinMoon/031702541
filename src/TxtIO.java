@@ -1,20 +1,12 @@
 import java.io.*;
 import java.util.LinkedList;
 
-public class TxtReadWriter {
-
-    public static void main(String args[]) {
-        int[] array = readFile("input.txt");
-        LinkedList<int[][]> sudokus = splitArray(array, 9, 2);
-        writeFile("output.txt", sudokus, 9);
-       
-    }
-
+public class TxtIO {
     /**
      * 读入TXT文件
      * 返回一个整型数组包含里面所有数字
      */
-    public static int[] readFile( String pathName) {
+    public int[] readFile( String pathName) {
     	int[] array = new int[5000];
     	int count = 0;
     	
@@ -37,8 +29,9 @@ public class TxtReadWriter {
 
     /**
      * 写入TXT文件
+     * 
      */
-    public static void writeFile(String pathName, LinkedList<int[][]> sudokus, int rank) {
+    public void writeFile(String pathName, LinkedList<int[][]> sudokus, int rank) {
         
     	try {
             File writeName = new File(pathName); 
@@ -74,10 +67,10 @@ public class TxtReadWriter {
      * 将整型readerFile读出的数组分解为不同盘面
      * 用LinkedList进行存储二位数组
      * 返回一个LinkedList
-     * param suCnt面数
-     * param rank阶数
+     * @param suCnt面数
+     * @param rank阶数
      */
-    public static LinkedList<int[][]> splitArray(int[] array, int rank, int suCnt) {
+    public LinkedList<int[][]> splitArray(int[] array, int rank, int suCnt) {
     	LinkedList<int[][]> sudokus = new LinkedList<int[][]>();
     	int count = 0;
     	for(int k = 0; k < suCnt; k++) {
@@ -94,7 +87,7 @@ public class TxtReadWriter {
     }
     
     
-    public static void printArray(int[][] array, int rank) {
+    public void printArray(int[][] array, int rank) {
     	for(int i = 0; i < rank; i++) {
     		for(int j = 0; j < rank; j++) {
     			System.out.print(array[i][j]);
